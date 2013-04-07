@@ -9,6 +9,7 @@
 ## - call exposes all registered services (none by default)
 #########################################################################
 
+import random
 
 def index():
     """
@@ -150,12 +151,13 @@ def typeError():
 # dbUid.allResidents,dbUid.student,
 def register_student():
     form2=SQLFORM.factory(dbUid.allResidents,dbUid.student, db.auth_user, keepvalues=True,
-    fields=['uid','first_name','last_name', 'password', 'gender','emergencyPh','dob','fbLink','personalPh',
+    fields=['first_name','last_name', 'password', 'gender','emergencyPh','dob','fbLink','personalPh',
     'interestedIn','bloodGroup','photo','webmailId','hostel','roomNo','rollNo'])
     form2.vars['type']='student'
     if form2.process().accepted:
 
         # filling up so called redundant field
+        form2.vars['uid'] = getNewUID()
         form2.vars['username']=form2.vars['uid']
         form2.vars['registration_key']='pending'
         form2.vars['email']=form2.vars['webmailId']
@@ -176,13 +178,14 @@ def register_student():
 
 def register_faculty():
     form2=SQLFORM.factory(dbUid.allResidents,dbUid.faculty, db.auth_user, keepvalues=True,
-	fields=['uid','first_name','last_name', 'password','gender','emergencyPh','dob','fbLink','personalPh',
+	fields=['first_name','last_name', 'password','gender','emergencyPh','dob','fbLink','personalPh',
 	'interestedIn','bloodGroup','photo','webmailId','dept','post','homepageLink','officePh','blockNo','houseNo'])
     form2.vars['type']='faculty'	#need to make this field readonly
     #if form2.process(onvalidation=generateUid).accepted:
     if form2.process().accepted:
 
         # filling up so called redundant field
+        form2.vars['uid'] = getNewUID()
         form2.vars['username']=form2.vars['uid']
         form2.vars['registration_key']='pending'
         form2.vars['email']=form2.vars['webmailId']
@@ -203,13 +206,14 @@ def register_faculty():
 
 def register_staff():
     form2=SQLFORM.factory(dbUid.allResidents,dbUid.staff, db.auth_user, keepvalues=True,
-	fields=['uid','first_name','last_name', 'password','gender','emergencyPh','dob','fbLink','personalPh',
+	fields=['first_name','last_name', 'password','gender','emergencyPh','dob','fbLink','personalPh',
 	'interestedIn','bloodGroup','photo','webmailId','address','post','section'])
     form2.vars['type']='staff'	#need to make this field readonly
     #if form2.process(onvalidation=generateUid).accepted:
     if form2.process().accepted:
 
         # filling up so called redundant field
+        form2.vars['uid']=getNewUID()
         form2.vars['username']=form2.vars['uid']
         form2.vars['registration_key']='pending'
         form2.vars['email']=form2.vars['webmailId']
@@ -230,13 +234,14 @@ def register_staff():
 
 def register_other():
     form2=SQLFORM.factory(dbUid.allResidents,dbUid.relationship, db.auth_user, keepvalues=True,
-	fields=['uid','first_name','last_name', 'password','gender','emergencyPh','dob','fbLink','personalPh','interestedIn',
+	fields=['first_name','last_name', 'password','gender','emergencyPh','dob','fbLink','personalPh','interestedIn',
 	'bloodGroup','photo','relatedtoUid','relname','relnameInverse'])
     form2.vars['type']='other'	#need to make this field readonly
     #if form2.process(onvalidation=generateUid).accepted:
     if form2.process().accepted:
 
         # filling up so called redundant field
+        form2.vars['uid']=getNewUID()
         form2.vars['username']=form2.vars['uid']
         form2.vars['registration_key']='pending'
         form2.vars['email']='admin@gmail.com'
@@ -255,8 +260,15 @@ def register_other():
         response.flash = 'please fill the form for others'
     return dict(form2=form2)
 
-def test():
-    return dict(test2=test2)
 
-def test2():
-    print "test2"
+# Amogh's code add to generate a random UID which is not present in the DB
+def getNewUID():
+    allUid = []
+    for row in db().select(db.auth_user.username):
+        allUid.append ( row.username )
+
+    random.seed()
+    newUid = random.randint ( 1, 89999 ) + 10000
+    for newUid in allUid:
+        newUid = random.randint ( 1, 89999 ) + 10000
+    return str( newUid )
