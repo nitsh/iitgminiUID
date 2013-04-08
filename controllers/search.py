@@ -6,8 +6,17 @@ def index():
 
 # function to return a dictionary of all fields which are allowed
 # to be accessed by the user
+# Parameters taken in order: stud, fac, staff, other
 @auth.requires_login()
-def getFieldList():
+def getFieldList( ):
+#################################################################
+# COMMENT THIS WHEN YOU DEPLOY THE APPLICATION
+################################################################
+    stud = 1
+    fac = 1
+    staff = 1
+    other = 1
+###############################################################
     query = dbUid.allResidents.uid == auth.user.username
     rows = dbUid ( query ).select()
     userPrivilegeNum = 0
@@ -31,8 +40,24 @@ def getFieldList():
         queryGetField = dbUid.privilegeTable.id == elem
         rows = dbUid ( queryGetField ).select()
         for row in rows:
-            tempNameConstruct = row.tableName + "." + row.field + "\n"
-            fieldNameList.append ( tempNameConstruct )
+            if ( stud and ( row.tableName == 'student' or row.tableName == 'allResidents' or row.tableName == 'post' or row.tableName == 'relationship' or row.tableName == 'vehicle') ):
+                tempNameConstruct = row.tableName + "." + row.field + "\n"
+                fieldNameList.append ( tempNameConstruct )
+            if ( staff and ( row.tableName == staff or row.tableName == 'allResidents' or row.tableName == 'post' or row.tableName == 'relationship' or row.tableName == 'vehicle') ):
+                tempNameConstruct = row.tableName + "." + row.field + "\n"
+                fieldNameList.append ( tempNameConstruct )
+            if ( fac and ( row.tableName == 'faculty' or row.tableName == 'allResidents' or row.tableName == 'post' or row.tableName == 'relationship' or row.tableName == 'vehicle') ):
+                tempNameConstruct = row.tableName + "." + row.field + "\n"
+                fieldNameList.append ( tempNameConstruct )
+            if ( other and ( row.tableName == 'allResidents' or row.tableName == 'post' or row.tableName == 'relationship' or row.tableName == 'vehicle') ):
+                tempNameConstruct = row.tableName + "." + row.field + "\n"
+                fieldNameList.append ( tempNameConstruct )
+    fieldNameList = list( set( fieldNameList ) )
+#############################################################################
+# REMOVE THIS WHILE DEPLOYING
+# THEN RETURN LIST AS IT IS
+############################################################################
     for i in fieldNameList:
         tempOut = tempOut + i
+############################################################################
     return dict ( message = T("DEBUGGING OUTPUT = " + tempOut ) )
