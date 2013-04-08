@@ -1,9 +1,9 @@
 '''
-Author: Amogh Tolay
-This is a backup code for understanding
-queries given by the user and mapping them into SQL queries
-This might use NLP in the future, as of now mainly uses regex
-matching for fetching data from the query
+    Author: Amogh Tolay
+    This is a backup code for understanding
+    queries given by the user and mapping them into SQL queries
+    This might use NLP in the future, as of now mainly uses regex
+    matching for fetching data from the query
 '''
 import nltk
 import re
@@ -48,6 +48,11 @@ def cfgMatch ( nlQuery ):
         for elem in tree:
             for i in tree.node:
                 print i
+##################################################################
+# FUNCTIONS THAT WILL ACTUALLY BE USED IN THE DEPOYED WEBSITE
+# For eg. things like searching database with similar entries for
+# certain things.....
+#################################################################
 
 def main():
     nlQuery = raw_input()

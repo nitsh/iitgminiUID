@@ -1,7 +1,7 @@
 (dp1
 S'last_query'
 p2
-S'dbUid.privilegeTable.id>0'
+S'db.auth_user.id>0'
 p3
 sS'_formkey[register]'
 p4
@@ -124,7 +124,7 @@ S'9f222bdc-401f-401b-816e-bac77d7668b2'
 p58
 sS'_formkey[no_table/create]'
 p59
-S'3f237e25-f3b9-49fa-98bb-b47b24c95a00'
+S'd6d357dd-522a-4cd0-8c3a-d5c9f09d7690'
 p60
 sS'_formkey[login]'
 p61
@@ -132,11 +132,11 @@ S'5f339f2e-513b-4752-8931-8e94f290487d'
 p62
 sS'_formkey[default]'
 p63
-S'16b40b7c-4dc4-4d0e-848f-515eb2184524'
+S'c5e97bf9-1a45-47e8-9fb4-5597a95ad97a'
 p64
 sS'_session_hash'
 p65
-S'961ce4ba1b3809ceb0e60c0d13654405'
+S'a13521e3590c2fc66a49e68b81228055'
 p66
 sS'_formkey[allResidents/1]'
 p67

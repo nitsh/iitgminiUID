@@ -1,6 +1,6 @@
 dbUid = DAL('mysql://root:@localhost/iitgUidW2P', migrate=False)
 
-dbUid.define_table('allResidents',
+dbUid.define_table('allResidents', 
     Field('id', 'id'),                         # (`id` int(11) NOT NULL AUTO_INCREMENT,)
     Field('uid', 'integer', notnull=True),                   # randomINT  (`uid` int(15) NOT NULL COMMENT 'randomINT',)
     Field('name', 'string', notnull=True),                   # (`name` varchar(255) NOT NULL,)
@@ -16,7 +16,7 @@ dbUid.define_table('allResidents',
     Field('bloodGroup', 'string', requires = IS_IN_SET(['AB+','AB-','O-','O+','A+','A-','B+','B-']), default=''),             # (`bloodGroup` enum('AB+','AB-','O-','O+','A+','A-','B+','B-','other') NOT NULL,)
     )
 
-dbUid.define_table('faculty',
+dbUid.define_table('faculty', 
     Field('id', 'id'),                         # (`id` int(11) NOT NULL AUTO_INCREMENT,)
     Field('uid', 'integer', notnull=True),                   # (`uid` int(15) NOT NULL,)
     Field('webmailId', 'string', notnull=True),              # (`webmailId` varchar(100) NOT NULL,)
@@ -28,13 +28,13 @@ dbUid.define_table('faculty',
     Field('houseNo', 'string', notnull=True),                # (`houseNo` varchar(10) NOT NULL,)
     )
 
-dbUid.define_table('loginDetails',
+dbUid.define_table('loginDetails', 
     Field('id', 'id'),                         # (`id` int(11) NOT NULL AUTO_INCREMENT,)
     Field('uid', 'integer', notnull=True),                   # (`uid` int(15) NOT NULL,)
     Field('password', 'string', notnull=True),               # (`password` varchar(255) NOT NULL,)
     )
 
-dbUid.define_table('post',
+dbUid.define_table('post', 
     Field('id', 'id'),                         # for mapping table of privileges  (`id` int(6) NOT NULL AUTO_INCREMENT COMMENT 'for mapping table of privileges',)
     Field('postName', 'string', notnull=True),               # (`postName` varchar(100) NOT NULL,)
     Field('webmailID', 'string'),              # (`webmailID` varchar(100) DEFAULT NULL,)
@@ -43,7 +43,7 @@ dbUid.define_table('post',
     Field('section', 'string', notnull=True),                # (`section` varchar(100) NOT NULL,)
     )
 
-dbUid.define_table('relationship',
+dbUid.define_table('relationship', 
     Field('id', 'id'),                         # (`id` int(11) NOT NULL AUTO_INCREMENT,)
     Field('uid', 'integer', notnull=True),                   # (`uid` int(15) NOT NULL,)
     Field('relatedtoUid', 'integer', notnull=True),          # (`relatedtoUid` int(15) NOT NULL,)
@@ -51,7 +51,7 @@ dbUid.define_table('relationship',
     Field('relnameInverse', 'string', notnull=True),         # (`relnameInverse` varchar(100) NOT NULL,)
     )
 
-dbUid.define_table('staff',
+dbUid.define_table('staff', 
     Field('id', 'id'),                         # (`id` int(11) NOT NULL AUTO_INCREMENT,)
     Field('uid', 'integer', notnull=True),                   # (`uid` int(15) NOT NULL,)
     Field('webmailId', 'string', notnull=True),              # (`webmailId` varchar(100) NOT NULL,)
@@ -60,7 +60,7 @@ dbUid.define_table('staff',
     Field('section', 'string', notnull=True),                # (`section` varchar(100) NOT NULL,)
     )
 
-dbUid.define_table('student',
+dbUid.define_table('student', 
     Field('id', 'id'),                         # (`id` int(11) NOT NULL AUTO_INCREMENT,)
     Field('uid', 'integer', notnull=True),                   # (`uid` int(15) NOT NULL,)
     Field('webmailId', 'string', notnull=True),              # (`webmailId` varchar(100) NOT NULL,)
@@ -69,7 +69,7 @@ dbUid.define_table('student',
     Field('rollNo', 'string', notnull=True),                 # (`rollNo` varchar(14) NOT NULL,)
     )
 
-dbUid.define_table('vehicle',
+dbUid.define_table('vehicle', 
     Field('id', 'id'),                         # (`id` int(11) NOT NULL AUTO_INCREMENT,)
     Field('regNo', 'string', notnull=True),                  # (`regNo` varchar(15) NOT NULL,)
     Field('type', 'string', notnull=True),                   # (`type` varchar(100) NOT NULL,)
