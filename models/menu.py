@@ -33,6 +33,10 @@ response.menu = [
     (T('Home'), False, URL('default', 'index'), [])
 ]
 
+## create menu for searching
+response.menu += [
+    (T('Search'), False, URL('search', 'index'), [])
+]
 DEVELOPMENT_MENU = True
 
 #########################################################################

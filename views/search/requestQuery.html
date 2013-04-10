@@ -2,8 +2,8 @@
 <h2>{{='Search'.capitalize()}}</h2>
 <script src="{{=URL('static','js/querysearch.js')}}"></script>
 
-<form name='queryform' id="form1" action="generateQuery" method="get">
-    <input type="submit" value="search" /><br><br>
+<form name='queryform' id="form1" action="/iitgminiUID/search/generateQuery" method="get">
+    <input type="submit" value="search" ><br><br></input>
     <select id="where0" name="where0" onchange="createNewElement(22)">
         <option> </option>
         {{for item in fields:}}

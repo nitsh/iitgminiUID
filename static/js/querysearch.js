@@ -12,11 +12,11 @@ function addAllInputs(divName, inputType){
             counterText++;
             break;
         case 'radio':
-            newdiv.innerHTML = "Entry " + (counterRadioButton + 1) + " <br><input type='radio' name='myRadioButtons"+(counterRadioButton+1) +"'>";
+            newdiv.innerHTML = "Entry " + (counterRadioButton + 1) + " <br><input type='radio' >";
             counterRadioButton++;
             break;
         case 'checkbox':
-            newdiv.innerHTML = "Add Filter <br><input type='checkbox' name='myCheckBoxes[]' onchange='createNewOption()'>";
+            newdiv.innerHTML = "Add Filter <br><input type='checkbox' onchange='createNewOption()'>";
             counterCheckBox++;
             break;
         case 'textarea':

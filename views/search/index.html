@@ -1,79 +1,12 @@
 {{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
 {{extend 'layout.html'}}
 
-<!--<script src="{{=URL('static','js/search.js')}}">-->
-
-<script type="text/javascript">
-    var jq=jQuery.noConflict();
-    jq(document).ready( function(){
-        jq(document).keydown(function(event){
-            // -- here comes your code of function --
-            jq("#keycode").html(event.which); // example code, event.which captures key index
-            });
-    });
-</script>
-
-<!-- call getSubField whenever a checkbox is checked/unchecked -->
-<asp:CheckBox ID = "cbx_CoBorrNotPresent" runat="server" Text="Not Present" 
-AutoPostBack="false" TextAlign="Left" Checked="true"  onclick="javascript:ChkClick();" />
-<script id="igClientScript" type="text/javascript">
-     function getSubField()
-     {
-        var selected ={
-        student : 0,
-        faculty : 0,
-        staff : 0,
-        others : 0
-        };
-
-        if( document.getElementById('userOptionsstudent').checked == true ){
-            selected.student = true;
-            //alert( "You have checked student." );
-        }
-        if( document.getElementById('userOptionsfaculty').checked == true ){
-            selected.faculty = true;
-            //alert( "You have checked faculty." );
-        }
-        if( document.getElementById('userOptionsstaff').checked == true ){
-            selected.staff = true;
-            alert( "You have checked staff." );
-       }
-       if( document.getElementById('userOptionsothers').checked == true ){
-            selected.others = true;
-           //alert( "You have checked others." );
-      }
-       self.location = "{{=URL('index', args=['selected.student', 'selected.faculty', 'selected.staff', 'selected.others'] )}}";
-       //field = [ "name", "dob" ];
-     }
-function ChkClick() 
-{
-var checkBox1 = document.getElementById('ctl00_cph_PageContent_cbx_CoBorrNotPresent');
-//if (confirm('Are you sure?')) 
-//{
-//   __doPostBack('ctl00$cph_PageContent$cbx_CoBorrNotPresent', '');
-    //self.location = "{{=URL('index' )}}";
-    //getSubField();
-//}
-//else 
-//{
-//return false;  
-//}
-};
-</script>
+<script src="{{=URL('static','js/search.js')}}"></script>
 
 
 <!--{{if 'message' in globals():}}-->
 <h3>{{=message}}</h3>
-<div id="keycode">Press any Key to see its index</div>
 {{=form}}
-<!--
-    <form action="" name="criteriaForm" >
-    <input type="checkbox" name="student" value="student" onchange="getSubField()"> Student <br>
-    <input type="checkbox" name="faculty" value="faculty" onchange="getSubField()"> Faculty <br>
-    <input type="checkbox" name="staff" value="staff" onchange="getSubField()"> Staff <br> 
-    <input type="checkbox" name="others" value="others" onchange="getSubField()"> Others <br> 
-    </form>
---> 
 <!--
 {{elif 'content' in globals():}}
 -->

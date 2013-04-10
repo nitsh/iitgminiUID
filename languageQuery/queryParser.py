@@ -54,6 +54,7 @@ def cfgMatch ( nlQuery ):
 # certain things.....
 #################################################################
 
+
 def main():
     nlQuery = raw_input()
     regexMatch ( nlQuery )
