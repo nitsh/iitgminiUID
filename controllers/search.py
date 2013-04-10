@@ -15,15 +15,6 @@ def index():
 # Parameters taken in order: stud, fac, staff, other
 @auth.requires_login()
 def getFieldList( stud, fac, staff, other ):
-#################################################################
-# COMMENT THIS WHEN YOU DEPLOY THE APPLICATION
-################################################################
-    #stud = 1
-    #fac = 1
-    #staff = 1
-    #other = 1
-    #response.flash = str(stud);
-###############################################################
     query = dbUid.allResidents.uid == auth.user.username
     rows = dbUid ( query ).select()
     userPrivilegeNum = 0
@@ -76,26 +67,24 @@ def requestQuery():
 # Add argument to the function call
 def generateQuery():
     filterNum = (len(request.vars)) /2;
-    pairList =  []
     index = 0;
+    queries = []
+    queries.append ( dbUid.allResidents.id > 0 )
     while index < filterNum:
-        key = request.vars['where'+str(index)].strip('\r\n')
-        value = request.vars['input'+str(index)].strip('\n\r')
-        pairList.append((key,value))
-        index+=1
-    pairList = [ ('allResidents.name', 'AMOGH'), ('allResidents.interestedIn', 'Machine Learning') ]
+        for table in dbUid:
+            for field in table:
+                if ( index < filterNum ):
+                    key = request.vars['where'+str(index)].strip('\r\n')
+                    value = request.vars['input'+str(index)].strip('\n\r')
+                    if ( key == str ( field ) ):
+                        queries.append( field.contains( value ) )
+                        index+=1
+
+    query = reduce ( lambda a,b: (a&b), queries )
+    rows = dbUid( query ).select()
     tempOut = ''
-    '''
-    This is in the case if I decide to take the entries in RAM and sort in memory
-    with python regex and maybe even NLTK
-    tableNamesList = []
-    for fieldName, value in pairList:
-        tableNamesList.append( fieldName.split('.')[0] )
-    tableNamesList = list ( set ( tableNamesList ) )
-    '''
-    query = 'dbUid.allResidents.id > 0'
-    queryString = 'dbUid ( ' + query + ' ).select()'
-#    rows = exec ( queryString )
-#    for row in rows:
-#        tempOut = tempOut + row.uid
-    return queryString
+    for row in rows:
+        tempOut += str(row.id) + " , "
+    return tempOut
+
+
