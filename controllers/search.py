@@ -79,12 +79,78 @@ def generateQuery():
                     if ( key == str ( field ) ):
                         queries.append( field.contains( value ) )
                         index+=1
+    queryAnd = reduce ( lambda a,b: ( a&b ), queries )
+    rows = dbUid( queryAnd ).select()
 
-    query = reduce ( lambda a,b: (a&b), queries )
-    rows = dbUid( query ).select()
+    # Result has been populated till here.
+    # Now do what you want to do with it.
+    # Below is just a temporary way to check while debugging. Comment this later
     tempOut = ''
     for row in rows:
         tempOut += str(row.id) + " , "
     return tempOut
 
+# Function returns all fields that can be searched using basic search
+# This should contain only fields accessible by everybody and that makes
+# sense for the user to search
+def findFieldListBasicSearch():
+    fieldList = [  # 'allResidents.name',
+#                    'allResidents.emergencyPh',
+#                    'allResidents.fbLink',
+#                    'allResidents.dob',
+#                    'allResidents.personalPh',
+#                    'allResidents.interestedIn',
+#                    'allResidents.bloodGroup',
+#                    'faculty.webmailId',
+#                    'faculty.dept',
+#                    'faculty.post',
+#                    'faculty.homepageLink',
+#                    'faculty.officePh',
+#                    'post.postName',
+#                    'post.webmailId',
+#                    'post.section',
+#                    'staff.webmailId',
+#                    'staff.address',
+#                    'staff.post',
+#                    'staff.section',
+                    'student.webmailId',
+                    'student.hostel',
+                    'student.rollNo',
+#                    'vehicle.regNo',
+#                    'vehicle.type',
+#                    'vehicle.instiRegNo'
+               ]
+    return fieldList
+def orQueryOfSameTable( queryList ):
+    queryFinalList = []
+    for oneTableList in queryList:
+        queryFinalList.append( reduce ( lambda a,b: (a|b), oneTableList )
+    return queryFinalList
+###############################################################
+# Amogh's code for basic searching
+# This is the page having only one text box and will get the
+# query and proceed appropriately
+##############################################################
+def basicSearch():
+    # Assume the query comes in string called search
+    search = "amogh"
+    cleanedSearchQuery = search
+    queryList = []
+    searchableFieldList = findFieldListBasicSearch()
+    for table in dbUid:
+        for field in table:
+            listOfOneTable = []
+            if ( str(field) in searchableFieldList ):
+                listOfOneTable.append( field.contains( cleanedSearchQuery ) )
+            pass
+        queryList.append( listOfOneTable )
+        pass
 
+    query = orQueryOfSameTable ( queryList )
+    for queryOne in query:
+        rows.append( dbUid( queryOne ).select() )
+# This is just temporary debugging and error checking
+    tempOut = ''
+    for row in rows:
+        tempOut += str(row.id) + ' , '
+    return tempOut
