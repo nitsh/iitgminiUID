@@ -151,7 +151,7 @@ def download():
     allows downloading of uploaded files
     http://..../[app]/default/download/[filename]
     """
-    return response.download(request, db)
+    return response.download(request, dbUid)
 
 def call():
     """
