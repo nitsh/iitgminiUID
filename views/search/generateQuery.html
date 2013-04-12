@@ -1,0 +1,18 @@
+{{extend 'layout.html'}}
+<h2>{{='Search'.capitalize()}}</h2>
+<script src="{{=URL('static','js/querysearch.js')}}"></script>
+
+<table>
+  <tr>
+	<td width="100"></td>
+	<td width="300">Name</td>
+	<td width="150">Type</td>
+	<td width="150">Gender</td></tr>
+{{for row in rows:}}<tr>
+<td><img width="80px" height ="100px"
+     src="{{=URL('download',args=row['photo'])}}" /></td>
+{{=TD(H3(A(row['name'], _href=URL("default/publicProfile", args=row['id']))))}}
+{{=TD(H3(row['type']))}}
+{{=TD(H3(row['gender']))}}
+</tr>{{pass}}
+</table>
