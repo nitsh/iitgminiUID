@@ -78,15 +78,26 @@ def generateQuery():
                         queries.append( field.contains( value ) )
                         index+=1
     queryAnd = reduce ( lambda a,b: ( a&b ), queries )
-    rows = dbUid( queryAnd ).select()
-
+    rows = dbUid( queryAnd ).select('id','name','gender', 'type', 'photo')
+    return dict(rows=rows)
     # Result has been populated till here.
     # Now do what you want to do with it.
     # Below is just a temporary way to check while debugging. Comment this later
-    tempOut = ''
-    for row in rows:
-        tempOut += str(row.id) + " , "
-    return tempOut
+    #tempOut = ''
+    #for row in rows:
+        #tempOut += str(row.id) + " , "
+    #return tempOut
+
+# Function returns all fields that can be searched using basic search
+# This should contain only fields accessible by everybody and that makes
+# sense for the user to search
+
+def download():
+    """
+    allows downloading of uploaded files
+    http://..../[app]/default/download/[filename]
+    """
+    return response.download(request, dbUid)
 
 # Function returns all fields that can be searched using basic search
 # This should contain only fields accessible by everybody and that makes
