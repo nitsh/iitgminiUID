@@ -1,0 +1,77 @@
+
+{{extend 'layout.html'}}
+
+<HEAD>
+ <STYLE type="text/css">
+
+.tab-box { 
+  border-bottom: 1px solid #DDD;
+  padding-bottom:5px;
+}
+.tab-box a {
+  border:1px solid #DDD;
+  color:#666666;
+  padding: 5px 15px;
+  text-decoration:none;
+  background-color: #eee;
+}
+.tab-box a.activeLink { 
+  background-color: #fff; 
+  border-bottom: 0; 
+  padding: 6px 15px;
+}
+.tabcontent{
+	width:700px;
+	padding:15px;
+	-moz-border-radius: 4px;
+	border-radius: 4px; 
+}
+
+.hide { display: none;
+}
+ </STYLE>
+</HEAD>
+
+  <div class="tab-box"> 
+    <a href="javascript:;" class="tabLink activeLink" id="cont-1">Tab 1</a> 
+    <a href="javascript:;" class="tabLink " id="cont-2">Tab 2</a> 
+  </div>
+  
+	<div class="tabcontent paddingAll" id="cont-1-1"> 
+	{{=form1}} 
+	</div>
+	
+	<div class="tabcontent paddingAll" id="cont-2-1" style = display : "none"> 
+	{{=form}}
+	</div> 
+	
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+
+	webPath= document.location.href;
+	webPathSplit=webPath.split("#");
+	webPathName= webPathSplit[1]+ "1"; /* Hack for check its blank or not */
+
+	if(webPathName=='undefined1') {
+	}else{
+		openTab=webPathSplit[1];
+        $(".tabLink").removeClass("activeLink");
+        $("#"+openTab).addClass("activeLink");
+        $(".tabcontent").addClass("hide");
+        $("#"+openTab+"-1").removeClass("hide")   
+	}
+
+    $(".tabLink").each(function(){
+      $(this).click(function(){
+        tabeId = $(this).attr('id');
+        $(".tabLink").removeClass("activeLink");
+        $(this).addClass("activeLink");
+        $(".tabcontent").addClass("hide");
+        $("#"+tabeId+"-1").removeClass("hide")   
+        //return false;	  
+      });
+    });  
+  });
+</script>

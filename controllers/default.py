@@ -38,64 +38,114 @@ def user():
     to decorate functions that need access control
     """
     if request.args(0)=='profile':
-        redirect(URL(profile))
+        redirect(URL(privateProfile))
     return dict(form=auth())
 
 """
 crud is defined in 'db.py' and crud2 is defined in 'iitgUid.py'
 """
 @auth.requires_login()
-def profile():
-    form=SQLFORM(db.auth_user,auth.user.id, fields=['first_name','last_name'])
-    resident=dbUid.allResidents
-    uid=resident.uid
-    q = uid==auth.user.username
-    s = dbUid(q)
-    rows = s.select()
-    for row in rows:
-        residentId = row.id
-        residentType = row.type
-        residentType = "Student"
-        response.flash = T("Hello "+row.name)
-    form.append(SQLFORM(dbUid.allResidents,residentId,deletable=False))
-    if( residentType == "Student" ):
-        resident=dbUid.student
-        uid=resident.uid
-        q = uid==auth.user.username
-        s = dbUid(q)
-        rows = s.select()
-        for row in rows:
-            studentId = row.id
-        form.append(SQLFORM(dbUid.student,studentId,deletable=False))
-    if( residentType == "Faculty" ):
-        resident=dbUid.faculty
-        uid=resident.uid
-        q = uid==auth.user.username
-        s = dbUid(q)
-        rows = s.select()
-        for row in rows:
-            facultyId = row.id
-        form2.append(crud2.update(dbUid.faculty,facultyId,deletable=False))
-    if( residentType == "Staff" ):
-        resident=dbUid.staff
-        uid=resident.uid
-        q = uid==auth.user.username
-        s = dbUid(q)
-        rows = s.select()
-        for row in rows:
-            staffId = row.id
-        form2.append(crud2.update(dbUid.staff,staffId,deletable=False))
-    if( residentType == "Other" ):
-        resident=dbUid.relationship
-        uid=resident.uid
-        q = uid==auth.user.username
-        s = dbUid(q)
-        rows = s.select()
-        for row in rows:
-            relationshipId = row.id
-        form2.append(crud2.update(dbUid.relationship,relationshipId,deletable=False))
-    return dict(form=form)
+def privateProfile():
+	resident=dbUid.allResidents
+	uid=resident.uid
+	q = uid==auth.user.username
+	s = dbUid(q)
+	rows = s.select()
+	for row in rows:
+		residentId = row.id
+		residentType = row.type
+		response.flash = T("Hello "+row.name)
+	form1 = crud2.update(dbUid.allResidents,residentId,deletable=False)
+	if( residentType == "Student" ):
+		resident=dbUid.student
+		uid=resident.uid
+		q = uid==auth.user.username
+		s = dbUid(q)
+		rows = s.select()
+		for row in rows:
+			studentId = row.id
+		form2 = crud2.update(dbUid.student,studentId,deletable=False)
+	if( residentType == "Faculty" ):
+		resident=dbUid.faculty
+		uid=resident.uid
+		q = uid==auth.user.username
+		s = dbUid(q)
+		rows = s.select()
+		for row in rows:
+			facultyId = row.id
+		form2 = (crud2.update(dbUid.faculty,facultyId,deletable=False))
+	if( residentType == "Staff" ):
+		resident=dbUid.staff
+		uid=resident.uid
+		q = uid==auth.user.username
+		s = dbUid(q)
+		rows = s.select()
+		for row in rows:
+			staffId = row.id
+		form2 = (crud2.update(dbUid.staff,staffId,deletable=False))
+	if( residentType == "Other" ):
+		resident=dbUid.relationship
+		uid=resident.uid
+		q = uid==auth.user.username
+		s = dbUid(q)
+		rows = s.select()
+		for row in rows:
+			relationshipId = row.id
+		form2 = (crud2.update(dbUid.relationship,relationshipId,deletable=False))
+	#response.flash = T("you are a " + residentType)
+	return dict( dict(form1=form1).items() + ( dict(form = form2) ).items())
 
+def publicProfile():
+	uid = 1
+	resident=dbUid.allResidents
+	uid=resident.uid
+	q = uid==auth.user.username
+	s = dbUid(q)
+	rows = s.select()
+	for row in rows:
+		residentId = row.id
+		residentType = row.type
+	form1 = crud2.update(dbUid.allResidents,residentId,deletable=False,readonly =True)
+	if( residentType == "Student" ):
+		resident=dbUid.student
+		uid=resident.uid
+		q = uid==auth.user.username
+		s = dbUid(q)
+		rows = s.select()
+		for row in rows:
+			studentId = row.id
+		form2 = crud2.update(dbUid.student,studentId,deletable=False,readonly =True)
+	if( residentType == "Faculty" ):
+		resident=dbUid.faculty
+		uid=resident.uid
+		q = uid==auth.user.username
+		s = dbUid(q)
+		rows = s.select()
+		for row in rows:
+			facultyId = row.id
+		form2 = (crud2.update(dbUid.faculty,facultyId,deletable=False,readonly =True))
+	if( residentType == "Staff" ):
+		resident=dbUid.staff
+		uid=resident.uid
+		q = uid==auth.user.username
+		s = dbUid(q)
+		rows = s.select()
+		for row in rows:
+			staffId = row.id
+		form2 = (crud2.update(dbUid.staff,staffId,deletable=False,readonly =True))
+	if( residentType == "Other" ):
+		resident=dbUid.relationship
+		uid=resident.uid
+		q = uid==auth.user.username
+		s = dbUid(q)
+		rows = s.select()
+		for row in rows:
+			relationshipId = row.id
+		form2 = (crud2.update(dbUid.relationship,relationshipId,deletable=False,readonly =True))
+	return dict(form1=form1 ,form2 = form2)
+	
+	
+	
 def download():
     """
     allows downloading of uploaded files

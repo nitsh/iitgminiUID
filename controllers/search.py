@@ -6,7 +6,6 @@ def index():
             Field( 'userOptions',widget=SQLFORM.widgets.checkboxes.widget, requires=[IS_IN_SET(userOptions, multiple=True), IS_NOT_EMPTY()] ), keepvalues=True)
     if form.process().accepted:
         redirect( URL( requestQuery, args=form.vars['userOptions'] ) )
-    #return dict( message = T( "Welcome to search" ) )
     return dict(message =T("Select database") , form=form)
 
 
@@ -57,7 +56,6 @@ def requestQuery():
     tableSelect = { 'student':0, 'faculty':0, 'staff':0, 'others':0 }
     for index in  request.args :
         tableSelect[ index ] = 1;
-    response.flash = str( tableSelect['others'] );
     fields = getFieldList( tableSelect['student'], tableSelect['faculty'], tableSelect['staff'], tableSelect['others'])
     return dict(fields=fields)
 
@@ -94,38 +92,46 @@ def generateQuery():
 # This should contain only fields accessible by everybody and that makes
 # sense for the user to search
 def findFieldListBasicSearch():
-    fieldList = [  # 'allResidents.name',
-#                    'allResidents.emergencyPh',
-#                    'allResidents.fbLink',
+    fieldList = [   'allResidents.name',
+                    'allResidents.emergencyPh',
+                    'allResidents.fbLink',
 #                    'allResidents.dob',
 #                    'allResidents.personalPh',
-#                    'allResidents.interestedIn',
-#                    'allResidents.bloodGroup',
-#                    'faculty.webmailId',
-#                    'faculty.dept',
-#                    'faculty.post',
-#                    'faculty.homepageLink',
+                    'allResidents.interestedIn',
+                    'allResidents.bloodGroup',
+                    'faculty.webmailId',
+                    'faculty.dept',
+                    'faculty.post',
+                    'faculty.homepageLink',
 #                    'faculty.officePh',
-#                    'post.postName',
-#                    'post.webmailId',
-#                    'post.section',
-#                    'staff.webmailId',
-#                    'staff.address',
-#                    'staff.post',
-#                    'staff.section',
+                    'post.postName',
+                    'post.webmailId',
+                    'post.section',
+                    'staff.webmailId',
+                    'staff.address',
+                    'staff.post',
+                    'staff.section',
                     'student.webmailId',
                     'student.hostel',
                     'student.rollNo',
-#                    'vehicle.regNo',
-#                    'vehicle.type',
-#                    'vehicle.instiRegNo'
+                    'vehicle.regNo',
+                    'vehicle.type',
+                    'vehicle.instiRegNo'
                ]
     return fieldList
+
 def orQueryOfSameTable( queryList ):
     queryFinalList = []
     for oneTableList in queryList:
-        queryFinalList.append( reduce ( lambda a,b: (a|b), oneTableList )
+        queryFinalList.append( reduce ( lambda a,b: (a|b), oneTableList ) )
     return queryFinalList
+# This function strips stuff and returns the query that should be searched in
+# the DB itself. ie. word stemming, stripping of punctuation and stop words etc
+# have to be done here only
+def cleanSearchQuery(query):
+    cleanedQuery = query
+    return cleanedQuery
+
 ###############################################################
 # Amogh's code for basic searching
 # This is the page having only one text box and will get the
@@ -133,24 +139,26 @@ def orQueryOfSameTable( queryList ):
 ##############################################################
 def basicSearch():
     # Assume the query comes in string called search
-    search = "amogh"
-    cleanedSearchQuery = search
+    search = "ma"
+    cleanedSearchQuery = cleanSearchQuery( search )
     queryList = []
     searchableFieldList = findFieldListBasicSearch()
     for table in dbUid:
+        listOfOneTable = []
         for field in table:
-            listOfOneTable = []
             if ( str(field) in searchableFieldList ):
                 listOfOneTable.append( field.contains( cleanedSearchQuery ) )
             pass
-        queryList.append( listOfOneTable )
+        if len( listOfOneTable ) >= 1 :
+            queryList.append( listOfOneTable )
         pass
-
     query = orQueryOfSameTable ( queryList )
+    rows = []
     for queryOne in query:
         rows.append( dbUid( queryOne ).select() )
 # This is just temporary debugging and error checking
     tempOut = ''
     for row in rows:
-        tempOut += str(row.id) + ' , '
+        for entry in row:
+            tempOut += str(entry.id) +  ' ,\n '
     return tempOut

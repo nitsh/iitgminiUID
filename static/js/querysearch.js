@@ -1,5 +1,6 @@
-var counter = 1;
+var whereCounter = 1;
 var inputCounter = 0;
+var counter = 0;
 var counterText = 0;
 var counterRadioButton = 0;
 var counterCheckBox = 0;
@@ -16,7 +17,7 @@ function addAllInputs(divName, inputType){
             counterRadioButton++;
             break;
         case 'checkbox':
-            newdiv.innerHTML = "Add Filter <br><input type='checkbox' onchange='createNewOption()'>";
+            newdiv.innerHTML = "Add Filter <br><input type='checkbox'>";
             counterCheckBox++;
             break;
         case 'textarea':
@@ -29,60 +30,115 @@ function addAllInputs(divName, inputType){
 
 function createNewElement(id)
 {
-    var ID = "input" + inputCounter;
-    //if (counter == limit){
-    //alert("You have reached the limit of adding " + counter + " inputs");
-    //}
-    //else {
-    //if(id === inputCounter-1 )
-    //{
-        //id = "where" + id;
-    //}
-    //var callerID = "where" + (inputCounter);
-    //alert("II"+inputCounter);
-    //alert("calling id" + id);
-    //var x=document.getElementById( callerID );
-    //if(callerID !== id)
-    //{
-    //    alert("already present" + callerID);
-    //}
-    //else
-    //{
-    inputCounter++;
-    var newdiv = document.createElement("input");
-    newdiv.setAttribute("name", ID);
-    newdiv.setAttribute("id", ID);
-    newdiv.setAttribute("type", "text");
-    newdiv.style.width = "300px";
-    //newdiv.innerHTML = "is " + " <br><input type='text' id=" + ID + " name=" + ID + ">";
-    //newdiv.innerHTML = "";
-    document.queryform.appendChild(newdiv);
-    addAllInputs( 'form1', 'checkbox' );
-    //}
+    var inputRequired = true;
+    //document.getElementById(id).disabled=true;
+    var ID = "input" + counter;
+    var inputType = "text"
+    var currWhereID = "where" + counter;
+    var attribute = document.getElementById( currWhereID );
+    if ( attribute){
+        var attributeType = attribute.options[attribute.selectedIndex].text;
+        // give special treatement to some attributes
+        if ( attributeType.search( 'age' ) != -1 ){
+            var comparatorID = "comparator" + counter;
+            var options = new Array("==","<",">");
+            createDropdown( comparatorID, options, "80px" );
+        }
+        if ( attributeType.search( 'gender' ) != -1 ){
+            inputRequired = false;
+            var comparatorID = "input" + counter;
+            var options = new Array("male","female");
+            createDropdown( comparatorID, options, "300px" );
+        }
+        if ( attributeType.search( 'type' ) != -1 ){
+            inputRequired = false;
+            var comparatorID = "input" + counter;
+            var options = new Array("student","faculty","staff","others");
+            createDropdown( comparatorID, options, "300px" );
+        }
+        if ( attributeType.search( 'bloodGroup' ) != -1 ){
+            inputRequired = false;
+            var comparatorID = "input" + counter;
+            var options = new Array("AB+","AB-","O-","O+","A+","A-","B+","B-","Bombay");
+            createDropdown( comparatorID, options, "300px" );
+        }
+        if ( attributeType.search( 'hostel' ) != -1 ){
+            inputRequired = false;
+            var comparatorID = "input" + counter;
+            var options = new Array("Barak","Brahmaputra","Dibang","Dihing","Kameng","Kapili","Manas","Siang","Subansiri","Umiam");
+            createDropdown( comparatorID, options, "300px" );
+        }
+        if ( attributeType.search( 'post' ) != -1 ){
+            inputRequired = false;
+            var comparatorID = "input" + counter;
+            var options = new Array("assistant Professor","Associate","Professor");
+            createDropdown( comparatorID, options, "300px" );
+        }
+        if ( attributeType.search( 'dob' ) != -1 ){
+            inputType = "date";
+        }
+
+    }
+    if(id != currWhereID){
+        // code to change input type needs to be WRITTEN here
+        //alert( id + "    yes::" + currWhereID);
+
+    }
+    else if (inputRequired){
+        inputRequired = false;
+        var newdiv = document.createElement("input");
+        newdiv.setAttribute("name", ID);
+        newdiv.setAttribute("id", ID);
+        newdiv.setAttribute("type", inputType);
+        newdiv.style.width = "300px";
+        //newdiv.innerHTML = "is " + " <br><input type='text' id=" + ID + " name=" + ID + ">";
+        document.queryform.appendChild(newdiv);
+    }
+    if( !inputRequired){
+        // create button for and/or
+        var addFilterID = "addifilter"+counter;
+        var option = new Array('','AND','OR');
+        createDropdown( addFilterID, option, "100px");
+        document.getElementById(addFilterID).onchange = function(){createNewOption()};
+        br = document.createElement("br");
+        document.queryform.appendChild( br );
+        //createNewOption();
+        var node=document.createTextNode(" ");
+        document.queryform.appendChild(node);
+    }
 }
 
 function createNewOption()
 {
-    var ID = "where" + counter;
     counter++;
+    var ID = "where" + counter;
+    var curraddFilterID = "addfilter" + (counter-1);
+    var attribute = document.getElementById( curraddFilterID );
+    if ( attribute){
+        alert(curraddFilterID);
+    }
+    else{
+        var fields= new Array();
+        var x=document.getElementById("where0");
+        for (var i=0;i<x.length;i++){ 
+            fields[i]=x.options[i].text;
+        }
+        createDropdown(ID, fields, "220px");
+        document.getElementById(ID).onchange = function(){createNewElement(ID)};
+    }
+}
+
+
+function createDropdown( id , fields, width)
+{
+    var ID = id;
     var select = document.createElement("select");
     select.setAttribute("name", ID);
     select.setAttribute("id", ID);
-    //alert("GGG"+ID);
-    //select.style.width = "300px";
-    /* setting an onchange event */
-    select.onchange = function() {createNewElement(2)};
+    select.style.width = width;
     var option;
-
-    var fields= new Array();
-    var x=document.getElementById("where0");
-    for (var i=0;i<x.length;i++)
-    { 
-        fields[i]=x.options[i].text;
-        //alert(fields[i]);
-    
-        /* we are going to add two options */
-        /* create options elements */
+    for (var i=0;i<fields.length;i++)
+    {
         option = document.createElement("option");
         option.setAttribute("value", fields[i] );
         option.innerHTML = fields[i];
@@ -90,20 +146,3 @@ function createNewOption()
     }
     document.queryform.appendChild(select);
 }
-
-//
-//function searchquery( formElement )
-//{
-//    alert("IN SEARCH SUBMIT");
-//    var inputs, selects, index;
-//    inputs = document.getElementsByTagName('input');
-//    selects = document.getElementsByTagName('select');
-//    for (index = 0; index < inputs.length; ++index)
-//    {
-//        // deal with inputs[index] element.
-//        var name = inputs[index];
-//        alert( name );
-//    }
-//
-//    return true;
-//}
